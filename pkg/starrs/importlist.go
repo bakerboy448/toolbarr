@@ -22,7 +22,7 @@ func (s *Starrs) ImportLists(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting import list: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return list, nil
@@ -57,7 +57,7 @@ func (s *Starrs) DeleteImportList(config *AppConfig, listID int64) (any, error) 
 		msg := s.log.Translate("Deleting %s import list: %d: %v", config.Name, listID, err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return s.log.Translate("Deleted %s import list with ID %d.", config.Name, listID), nil
@@ -157,7 +157,7 @@ func (s *Starrs) testImportListReply(name, listName string, listID int64, err er
 	msg := s.log.Translate("Testing %s import list: %s (%d): %s", name, listName, listID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return "", fmt.Errorf(msg)
+	return "", errors.New(msg)
 }
 
 func (s *Starrs) UpdateLidarrImportList(
@@ -262,7 +262,7 @@ func (s *Starrs) updateImportListReply(
 	msg := s.log.Translate("Updating %s import list: %s (%d): %s", name, listName, listID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return nil, fmt.Errorf(msg)
+	return nil, errors.New(msg)
 }
 
 func (s *Starrs) ExportImportLists(config *AppConfig, selected Selected) (string, error) {

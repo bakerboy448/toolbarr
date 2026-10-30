@@ -24,7 +24,7 @@ func (s *Starrs) MetadataProfiles(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting metadata profiles: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return profiles, nil
@@ -54,7 +54,7 @@ func (s *Starrs) QualityProfiles(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting quality profiles: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return profiles, nil
@@ -89,7 +89,7 @@ func (s *Starrs) DeleteQualityProfile(config *AppConfig, profileID int64) (any, 
 		msg := s.log.Translate("Deleting %s quality profile: %d: %v", config.Name, profileID, err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return s.log.Translate("Deleted %s quality profile with ID %d.", config.Name, profileID), nil
@@ -219,7 +219,7 @@ func (s *Starrs) updateQualityProfileReply(
 	msg := s.log.Translate("Updating %s quality profile: %s (%d): %s", name, profile, profileID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return nil, fmt.Errorf(msg)
+	return nil, errors.New(msg)
 }
 
 func (s *Starrs) ExportQualityProfiles(config *AppConfig, selected Selected) (string, error) {

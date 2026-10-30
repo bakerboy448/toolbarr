@@ -1,6 +1,7 @@
 package starrs
 
 import (
+	"errors"
 	"fmt"
 
 	"golift.io/starr"
@@ -19,7 +20,7 @@ func (s *Starrs) Tags(config *AppConfig) (map[int]string, error) {
 		msg := s.log.Translate("Getting tags: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	tagmap := make(map[int]string, len(tags))

@@ -1,6 +1,7 @@
 package starrs
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -32,7 +33,7 @@ func (s *Starrs) BlockList(config *AppConfig, pageSize, page int, sortKey, sortD
 		msg := s.log.Translate("Getting block lists: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return list, nil
@@ -67,7 +68,7 @@ func (s *Starrs) DeleteBlockList(config *AppConfig, listID int64) (any, error) {
 		msg := s.log.Translate("Deleting %s block list: %d: %v", config.Name, listID, err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return s.log.Translate("Deleted %s block list with ID %d.", config.Name, listID), nil

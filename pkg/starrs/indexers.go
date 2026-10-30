@@ -23,7 +23,7 @@ func (s *Starrs) Indexers(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting indexers: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return "", fmt.Errorf(msg)
+		return "", errors.New(msg)
 	}
 
 	return indexers, nil
@@ -60,7 +60,7 @@ func (s *Starrs) DeleteIndexer(config *AppConfig, indexerID int64) (any, error) 
 		msg := s.log.Translate("Deleting %s indexer: %d: %v", config.Name, indexerID, err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	msg := s.log.Translate("Deleted %s indexer with ID %d.", config.Name, indexerID)
@@ -176,7 +176,7 @@ func (s *Starrs) testIndexerReply(
 	msg := s.log.Translate("Testing %s indexer: %s (%d): %s", name, indexerName, indexerID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return "", fmt.Errorf(msg)
+	return "", errors.New(msg)
 }
 
 func (s *Starrs) UpdateLidarrIndexer(
@@ -294,7 +294,7 @@ func (s *Starrs) updateIndexerReply(
 	msg := s.log.Translate("Updating %s indexer: %s (%d): %s", name, indexerName, indexerID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return nil, fmt.Errorf(msg)
+	return nil, errors.New(msg)
 }
 
 func (s *Starrs) ExportIndexer(config *AppConfig, selected Selected) (string, error) {

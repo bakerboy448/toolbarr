@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/user"
@@ -117,12 +118,12 @@ func (a *App) SaveConfigItem(name string, value any, reload bool) (*ConfigSaved,
 	err := decoder.Decode(config, map[string][]string{name: {fmt.Sprint(value)}})
 	if err != nil {
 		a.log.Errorf("Writing config: decoding '%s' value '%v' error: %v", name, value, err)
-		return nil, fmt.Errorf(a.log.Translate("Writing config: decoding '%s' value '%v' error: %v", name, value, err))
+		return nil, errors.New(a.log.Translate("Writing config: decoding '%s' value '%v' error: %v", name, value, err))
 	}
 
 	if _, err = a.config.Write(config); err != nil {
 		a.log.Errorf("Error writing config: %v", err.Error())
-		return nil, fmt.Errorf(a.log.Translate("Error writing config: %v", err.Error()))
+		return nil, errors.New(a.log.Translate("Error writing config: %v", err.Error()))
 	}
 
 	if reload {
@@ -148,7 +149,7 @@ func (a *App) PickFolder(path string) (string, error) {
 	})
 	if err != nil {
 		wr.LogError(a.ctx, err.Error())
-		return "", fmt.Errorf(a.log.Translate("Opening directory browser: %v", err))
+		return "", errors.New(a.log.Translate("Opening directory browser: %v", err))
 	}
 
 	return dir, nil
@@ -169,7 +170,7 @@ func (a *App) PickFile(path, extname, extensions string) (string, error) {
 	})
 	if err != nil {
 		wr.LogError(a.ctx, err.Error())
-		return "", fmt.Errorf(a.log.Translate("Opening file browser: %v", err))
+		return "", errors.New(a.log.Translate("Opening file browser: %v", err))
 	}
 
 	return dir, nil

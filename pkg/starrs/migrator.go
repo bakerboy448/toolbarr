@@ -91,7 +91,7 @@ func (s *Starrs) MigratorInfo(config *AppConfig) (*MigratorInfo, error) {
 
 	info, err := s.migratorInfo(sql, config)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	return info, nil
@@ -116,7 +116,7 @@ func (s *Starrs) DeleteRootFolder(config *AppConfig, folder string) (*RootFolder
 
 	_, err = sql.Delete("RootFolders", fmt.Sprintf("Path='%s'", folder))
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	return s.returnMessage(sql, config, s.log.Translate("Success! Deleted root folder: %s", folder))
@@ -134,7 +134,7 @@ func (s *Starrs) UpdateRootFolder(config *AppConfig, oldPath, newPath string) (*
 
 	msg, err := s.updateRootFolder(AppTables(config.App), sql, oldPath, newPath)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	return s.returnMessage(sql, config, msg)
@@ -158,7 +158,7 @@ func (s *Starrs) UpdateRecycleBin(config *AppConfig, newPath string) (*RootFolde
 
 	count, err := sql.UpdateRecyclebin(s.ctx, newPath)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	msg := s.log.Translate("Changed recycle bin path! Rows Updated: %d", count)
@@ -178,7 +178,7 @@ func (s *Starrs) UpdateInvalidItems(
 	s.log.Tracef("Call:UpdateDBInvalidItems(%s,%s,%d)", config.Name, table, len(ids))
 
 	if newPath == "" {
-		return nil, fmt.Errorf(s.log.Translate("No path provided."))
+		return nil, errors.New(s.log.Translate("No path provided."))
 	}
 
 	sql, err := s.newSQL(config)
@@ -206,7 +206,7 @@ func (s *Starrs) UpdateInvalidItems(
 
 	msg, err := fn(sql, &column, newPath, ids)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	return s.returnMessage(sql, config, msg)
@@ -215,7 +215,7 @@ func (s *Starrs) UpdateInvalidItems(
 func (s *Starrs) returnMessage(sql *sqlConn, config *AppConfig, msg string) (*RootFolders, error) {
 	info, err := s.migratorInfo(sql, config)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	return &RootFolders{Msg: msg, Info: info}, nil

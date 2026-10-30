@@ -1,7 +1,7 @@
 package app
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/Notifiarr/toolbarr/pkg/starrs"
 )
@@ -33,7 +33,7 @@ func (a *App) SaveInstance(idx int, instance starrs.AppConfig, defaultInstance b
 
 	settings, err := a.config.Write(settings)
 	if err != nil {
-		return nil, fmt.Errorf(a.log.Translate("Error writing config: %v", err.Error()))
+		return nil, errors.New(a.log.Translate("Error writing config: %v", err.Error()))
 	}
 
 	return &SavedInstance{
@@ -65,7 +65,7 @@ func (a *App) RemoveInstance(idx int, starrApp string) (*SavedInstance, error) {
 
 	settings, err := a.config.Write(settings)
 	if err != nil {
-		return nil, fmt.Errorf(a.log.Translate("Error writing config: %v", err.Error()))
+		return nil, errors.New(a.log.Translate("Error writing config: %v", err.Error()))
 	}
 
 	if settings.Instance[starrApp] >= len(settings.Instances[starrApp]) {

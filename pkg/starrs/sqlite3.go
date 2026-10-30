@@ -3,6 +3,7 @@ package starrs
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"os"
 
@@ -33,14 +34,14 @@ type Entry struct {
 // Must call Close() when finished.
 func (s *Starrs) newSQL(config *AppConfig) (*sqlConn, error) {
 	if stat, err := os.Stat(config.DBPath); err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Unable to open or read DB file: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Unable to open or read DB file: %v", err.Error()))
 	} else if stat.IsDir() {
-		return nil, fmt.Errorf(s.log.Translate("You picked a folder, but you need to pick a sqlite3 database FILE."))
+		return nil, errors.New(s.log.Translate("You picked a folder, but you need to pick a sqlite3 database FILE."))
 	}
 
 	conn, err := sqlx.Open("sqlite", config.DBPath)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Unable to open or read DB file: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Unable to open or read DB file: %v", err.Error()))
 	}
 
 	return &sqlConn{
