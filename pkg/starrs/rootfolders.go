@@ -1,6 +1,7 @@
 package starrs
 
 import (
+	"errors"
 	"fmt"
 
 	"golift.io/starr"
@@ -18,7 +19,7 @@ func (s *Starrs) RootFolders(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting root folders: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return list, nil

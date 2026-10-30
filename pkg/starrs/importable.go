@@ -2,6 +2,7 @@ package starrs
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -106,7 +107,7 @@ func filterListItemsByID[N any](items []*N, selected Selected) []*N { //nolint:f
 func (s *Starrs) exportItems(item string, config *AppConfig, data any, count int, err error) (string, error) {
 	if err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return "", fmt.Errorf(s.log.Translate("Getting %s from %s: %v", item, config.Name, err))
+		return "", errors.New(s.log.Translate("Getting %s from %s: %v", item, config.Name, err))
 	}
 
 	filePath, err := wr.SaveFileDialog(s.ctx, wr.SaveDialogOptions{
@@ -119,7 +120,7 @@ func (s *Starrs) exportItems(item string, config *AppConfig, data any, count int
 	})
 	if err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return "", fmt.Errorf(s.log.Translate("Opening file browser: %v", err))
+		return "", errors.New(s.log.Translate("Opening file browser: %v", err))
 	} else if filePath == "" {
 		return "", nil
 	}
@@ -129,7 +130,7 @@ func (s *Starrs) exportItems(item string, config *AppConfig, data any, count int
 	fileOpen, err := os.OpenFile(filePath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, mnd.Mode0640)
 	if err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return "", fmt.Errorf(s.log.Translate("Opening file: %v", err))
+		return "", errors.New(s.log.Translate("Opening file: %v", err))
 	}
 	defer fileOpen.Close()
 
@@ -138,7 +139,7 @@ func (s *Starrs) exportItems(item string, config *AppConfig, data any, count int
 
 	if err = encoder.Encode(data); err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return "", fmt.Errorf(s.log.Translate("Encoding and writing file: %v", err))
+		return "", errors.New(s.log.Translate("Encoding and writing file: %v", err))
 	}
 
 	return s.log.Translate("Saved %d %s to %s", count, item, filePath), nil
@@ -173,7 +174,7 @@ func importItems[N any](s *Starrs, item string, config *AppConfig, input []N) (*
 	})
 	if err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return nil, fmt.Errorf(s.log.Translate("Opening file browser: %v", err))
+		return nil, errors.New(s.log.Translate("Opening file browser: %v", err))
 	} else if filePath == "" {
 		return &DataReply{Msg: ""}, nil
 	}
@@ -184,13 +185,13 @@ func importItems[N any](s *Starrs, item string, config *AppConfig, input []N) (*
 	fileOpen, err := os.Open(filePath)
 	if err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return nil, fmt.Errorf(s.log.Translate("Opening file: %v", err))
+		return nil, errors.New(s.log.Translate("Opening file: %v", err))
 	}
 	defer fileOpen.Close()
 
 	if err := json.NewDecoder(fileOpen).Decode(&input); err != nil {
 		wr.LogError(s.ctx, err.Error())
-		return nil, fmt.Errorf(s.log.Translate("Decoding input file failed: %v", err))
+		return nil, errors.New(s.log.Translate("Decoding input file failed: %v", err))
 	}
 
 	return &DataReply{

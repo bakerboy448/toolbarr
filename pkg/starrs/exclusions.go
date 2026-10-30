@@ -22,7 +22,7 @@ func (s *Starrs) Exclusions(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting import list exclusions: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return "", fmt.Errorf(msg)
+		return "", errors.New(msg)
 	}
 
 	return exclusion, nil
@@ -57,7 +57,7 @@ func (s *Starrs) DeleteExclusion(config *AppConfig, exclusionID int64) (any, err
 		msg := s.log.Translate("Deleting %s import list exclusion: %d: %v", config.Name, exclusionID, err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return s.log.Translate("Deleted %s import list exclusion with ID %d.", config.Name, exclusionID), nil
@@ -187,7 +187,7 @@ func (s *Starrs) updateExclusionReply(
 	msg := s.log.Translate("Updating %s import list exclusion: %s (%d): %s", name, exclusionName, exclusionID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return nil, fmt.Errorf(msg)
+	return nil, errors.New(msg)
 }
 
 func (s *Starrs) ExportExclusions(config *AppConfig, selected Selected) (string, error) {

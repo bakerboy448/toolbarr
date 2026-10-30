@@ -2,6 +2,7 @@
 package starrs
 
 import (
+	"errors"
 	"fmt"
 
 	"golift.io/starr"
@@ -32,7 +33,7 @@ func (s *Starrs) TestInstance(config *AppConfig) (string, error) {
 	if test.App != config.App {
 		msg = s.log.Translate("Connection test failed! Wrong app found. Expected %s but found %s. App Version: %s",
 			config.App, test.App, test.Version)
-		return "", fmt.Errorf(msg)
+		return "", errors.New(msg)
 	}
 
 	if config.DBPath == "" {
@@ -60,13 +61,13 @@ type instanceTest struct {
 func (s *Starrs) testDBPath(config *AppConfig) (*instanceTest, error) {
 	sql, err := s.newSQL(config)
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Connection test failed! %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Connection test failed! %v", err.Error()))
 	}
 	defer sql.Close()
 
 	tables, err := sql.RowsStringSlice(s.ctx, "SELECT name FROM sqlite_schema WHERE type='table'")
 	if err != nil {
-		return nil, fmt.Errorf(s.log.Translate("Connection test failed! Querying Sqlite3 DB: %v", err.Error()))
+		return nil, errors.New(s.log.Translate("Connection test failed! Querying Sqlite3 DB: %v", err.Error()))
 	}
 
 	version, _ := sql.RowString(s.ctx, "select sqlite_version()")
@@ -105,7 +106,7 @@ func (s *Starrs) testInstance(config *AppConfig) (*instanceTest, error) {
 func (i *instance) testWithoutKey() (*instanceTest, error) {
 	if i.Username != "" {
 		if err := i.Login(i.ctx); err != nil {
-			return nil, fmt.Errorf(i.log.Translate("Login (username/password) failed: %v", err.Error()))
+			return nil, errors.New(i.log.Translate("Login (username/password) failed: %v", err.Error()))
 		}
 	}
 

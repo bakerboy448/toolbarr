@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"path"
 	"sync"
@@ -47,7 +48,7 @@ func (a *App) CheckUpdate() (*Release, error) {
 
 	if err != nil {
 		a.log.Errorf("Checking for current %s release: %v", updates, err)
-		return nil, fmt.Errorf(a.log.Translate("Checking for current %s release: %v", updates, err))
+		return nil, errors.New(a.log.Translate("Checking for current %s release: %v", updates, err))
 	}
 
 	a.updates.Lock()
@@ -89,7 +90,7 @@ func (a *App) DownloadUpdate() (*UpdateInfo, error) {
 
 	a.log.Infof("Downloading File")
 
-	err := fmt.Errorf(a.log.Translate("Missing release, check first?"))
+	err := errors.New(a.log.Translate("Missing release, check first?"))
 	if a.updates.release == nil {
 		return nil, err
 	}
@@ -100,7 +101,7 @@ func (a *App) DownloadUpdate() (*UpdateInfo, error) {
 		a.ctx, a.updates.release.CurrURL, path.Base(a.updates.release.CurrURL), nil)
 	if err != nil {
 		a.log.Errorf("Downloading %s update failed: %v", updates, err.Error())
-		return nil, fmt.Errorf(a.log.Translate("Downloading %s update failed: %v", updates, err.Error()))
+		return nil, errors.New(a.log.Translate("Downloading %s update failed: %v", updates, err.Error()))
 	}
 
 	size := mnd.FormatBytes(a.updates.progress.Size())

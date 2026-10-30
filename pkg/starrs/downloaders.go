@@ -24,7 +24,7 @@ func (s *Starrs) Downloaders(config *AppConfig) (any, error) {
 		msg := s.log.Translate("Getting download clients: %v", err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return downloaders, nil
@@ -61,7 +61,7 @@ func (s *Starrs) DeleteDownloader(config *AppConfig, clientID int64) (any, error
 		msg := s.log.Translate("Deleting %s download client: %d: %v", config.Name, clientID, err.Error())
 		s.log.Wails.Error(msg)
 
-		return nil, fmt.Errorf(msg)
+		return nil, errors.New(msg)
 	}
 
 	return s.log.Translate("Deleted %s download client with ID %d.", config.Name, clientID), nil
@@ -174,7 +174,7 @@ func (s *Starrs) testDownloadClientReply(
 	msg := s.log.Translate("Testing %s download client: %s (%d): %s", name, clientName, clientID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return "", fmt.Errorf(msg)
+	return "", errors.New(msg)
 }
 
 func (s *Starrs) UpdateLidarrDownloadClient(
@@ -292,7 +292,7 @@ func (s *Starrs) updateDownloadClientReply(
 	msg := s.log.Translate("Updating %s download client: %s (%d): %s", name, clientName, clientID, err.Error())
 	s.log.Wails.Error(msg)
 
-	return nil, fmt.Errorf(msg)
+	return nil, errors.New(msg)
 }
 
 func (s *Starrs) ExportDownloadClients(config *AppConfig, selected Selected) (string, error) {
